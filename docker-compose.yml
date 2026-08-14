@@ -1,0 +1,43 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env
+    ports:
+      - "3002:3002"
+    volumes:
+      - db_data:/app/data
+      - ./backend/certs:/app/certs:ro
+    environment:
+      DB_PATH: /app/data/expense_tracker.db
+      TELLER_CERT_PATH: /app/certs/certificate.pem
+      TELLER_KEY_PATH: /app/certs/private_key.pem
+      OLLAMA_URL: http://host.docker.internal:5002
+      OLLAMA_MODEL: gemma4:latest
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3002/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5174:5173"
+    environment:
+      VITE_BACKEND_URL: http://backend:3002
+      VITE_API_KEY: ${VITE_API_KEY}
+      VITE_TELLER_APP_ID: ${VITE_TELLER_APP_ID}
+      VITE_TELLER_ENV: ${VITE_TELLER_ENV:-sandbox}
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  db_data:
