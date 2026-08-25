@@ -4,15 +4,16 @@ import MerchantBreakdown from './MerchantBreakdown'
 import Income from './Income'
 import Transactions from './Transactions'
 
-const TABS = [
+const ALL_TABS = [
   ['categories',   'Categories'],
   ['merchants',    'Merchants'],
   ['income',       'Income'],
   ['transactions', 'Transactions'],
 ]
 
-export default function Breakdown({ dateRange, syncVersion }) {
-  const [view, setView] = useState('categories')
+export default function Breakdown({ dateRange, syncVersion, tabs }) {
+  const TABS = tabs ? ALL_TABS.filter(([val]) => tabs.includes(val)) : ALL_TABS
+  const [view, setView] = useState(TABS[0][0])
 
   return (
     <div className="space-y-4">

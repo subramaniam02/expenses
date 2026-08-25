@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { format } from 'date-fns'
 import Breakdown from './Breakdown'
-import ExpenseIncomeTrend from './ExpenseIncomeTrend'
 import { formatCat } from '../utils/formatCat'
 
 const fmt = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
@@ -176,11 +175,8 @@ export default function Overview({ dateRange, syncVersion }) {
       {/* Summary text insight */}
       <InsightCard dateRange={dateRange} />
 
-      {/* Expense & income trend (fixed trailing 12 months) */}
-      <ExpenseIncomeTrend syncVersion={syncVersion} />
-
       {/* Breakdown */}
-      <Breakdown dateRange={dateRange} syncVersion={syncVersion} />
+      <Breakdown dateRange={dateRange} syncVersion={syncVersion} tabs={['income', 'transactions']} />
 
       {(!summary || summary.transaction_count === 0) && (
         <div className="flex flex-col items-center py-16 text-slate-400 bg-white rounded-xl border border-slate-200">

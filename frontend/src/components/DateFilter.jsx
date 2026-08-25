@@ -1,12 +1,13 @@
 import { useState } from 'react'
-import { startOfMonth, endOfMonth, subMonths, startOfYear, endOfYear, subYears } from 'date-fns'
+import { startOfMonth, endOfMonth, subMonths, subDays, startOfYear, endOfYear, subYears } from 'date-fns'
 
 const today = () => new Date()
 
 const PRESETS = [
+  { label: 'Last 7 Days',  getRange: () => ({ start: subDays(today(), 6), end: today() }), default: true },
   { label: 'This Month',   getRange: () => ({ start: startOfMonth(today()), end: today() }) },
   { label: 'Last Month',   getRange: () => { const l = subMonths(today(), 1); return { start: startOfMonth(l), end: endOfMonth(l) } } },
-  { label: 'Last 3M',      getRange: () => ({ start: startOfMonth(subMonths(today(), 2)), end: today() }), default: true },
+  { label: 'Last 3M',      getRange: () => ({ start: startOfMonth(subMonths(today(), 2)), end: today() }) },
   { label: 'Last 6M',      getRange: () => ({ start: startOfMonth(subMonths(today(), 5)), end: today() }) },
   { label: 'Last 9M',      getRange: () => ({ start: startOfMonth(subMonths(today(), 8)), end: today() }) },
   { label: 'Last 12M',     getRange: () => ({ start: startOfMonth(subMonths(today(), 11)), end: today() }) },
@@ -15,7 +16,7 @@ const PRESETS = [
 ]
 
 export default function DateFilter({ dateRange, onChange }) {
-  const [activePreset, setActivePreset] = useState('Last 3M')
+  const [activePreset, setActivePreset] = useState('Last 7 Days')
   const [customStart, setCustomStart] = useState('')
   const [customEnd, setCustomEnd] = useState('')
 

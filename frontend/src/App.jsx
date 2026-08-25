@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
-import { subMonths, startOfMonth, format } from 'date-fns'
+import { subDays, format } from 'date-fns'
 import DateFilter from './components/DateFilter'
 import Overview from './components/Overview'
+import Trends from './components/Trends'
 import Refunds from './components/Refunds'
 import Recurring from './components/Recurring'
 import Budgets from './components/Budgets'
@@ -48,6 +49,7 @@ const ICONS = {
 
 const NAV_ITEMS = [
   { id: 'overview',      label: 'Overview',         icon: 'overview',    group: 'analyze' },
+  { id: 'trends',       label: 'Trends',           icon: 'time',        group: 'analyze' },
   { id: 'refunds',      label: 'Refunds & Credits',icon: 'refunds',     group: 'analyze' },
   { id: 'recurring',    label: 'Recurring',        icon: 'recurring',   group: 'manage' },
   { id: 'budgets',      label: 'Budgets',          icon: 'budgets',     group: 'manage' },
@@ -61,6 +63,7 @@ const NAV_ITEMS = [
 
 const NAV_LABELS = {
   overview: 'Overview',
+  trends: 'Trends',
   refunds: 'Refunds & Credits',
   recurring: 'Recurring', budgets: 'Budgets', forecast: 'Forecast',
   anomalies: 'Anomalies', rules: 'Auto-categorize', taxreport: 'Tax Report',
@@ -69,7 +72,7 @@ const NAV_LABELS = {
 
 function getDefaultDateRange() {
   const end = new Date()
-  return { start: startOfMonth(subMonths(end, 2)), end }
+  return { start: subDays(end, 6), end }
 }
 
 function useRelativeTime(isoString) {
@@ -157,6 +160,7 @@ export default function App() {
     const props = { dateRange, syncVersion }
     switch (activeSection) {
       case 'overview':     return <Overview {...props} />
+      case 'trends':       return <Trends {...props} />
       case 'refunds':      return <Refunds {...props} />
       case 'recurring':    return <Recurring />
       case 'budgets':      return <Budgets />
